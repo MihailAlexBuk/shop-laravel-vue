@@ -157,8 +157,62 @@
                                                 <div class="related-title">
                                                     <h3><span>We know you will love</span></h3>
                                                 </div>
-                                                <ul class="products columns-4" data-columns="4">
+                                                <ul v-if="user" class="products columns-4" data-columns="4">
                                                     <li class="product product-no-border style-2" v-for="product in getRecommendedProducts">
+                                                        <div class="product-container">
+                                                            <figure>
+                                                                <div class="product-wrap">
+                                                                    <div class="product-images">
+                                                                        <span class="onsale" v-if="product.discount > 0">Sale!</span>
+                                                                        <div class="shop-loop-thumbnail shop-loop-front-thumbnail">
+                                                                            <router-link :to="{name: 'product', params: {id: product.id}}"><img style="width: 300px; height: 300px;" :src="product.image_url_1" alt=""/></router-link>
+                                                                        </div>
+                                                                        <div class="shop-loop-thumbnail shop-loop-back-thumbnail">
+                                                                            <router-link :to="{name: 'product', params:{id:product.id}}"><img style="width: 320px; height: 320px;" :src="product.image_url_1" alt=""/></router-link>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <figcaption>
+                                                                    <div class="shop-loop-product-info">
+                                                                        <div class="info-meta clearfix">
+                                                                            <div class="star-rating">
+                                                                                <span style="width:0%"></span>
+                                                                            </div>
+                                                                            <div class="loop-add-to-wishlist">
+                                                                                <div class="yith-wcwl-add-to-wishlist">
+                                                                                    <div class="yith-wcwl-add-button">
+                                                                                        <a @click="addToWishlist(product.id)" href="#" class="add_to_wishlist">
+                                                                                            Add to Wishlist
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="info-content-wrap">
+                                                                            <h3 class="product_title">
+                                                                                <router-link :to="{name: 'product', params:{id:product.id}}">{{product.title}}</router-link>
+                                                                            </h3>
+                                                                            <div class="info-price">
+																						<span class="price">
+																							<del><span class="amount">{{product.price}}$</span></del> <ins><span class="amount">{{product.discountPrice}}$</span></ins>
+																						</span>
+                                                                            </div>
+                                                                            <div class="loop-action">
+                                                                                <div class="loop-add-to-cart">
+                                                                                    <a @click="addToCart(product.id)" href="#" class="add_to_cart_button">
+                                                                                        Add to cart
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </figcaption>
+                                                            </figure>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                                <ul v-else class="products columns-4" data-columns="4">
+                                                    <li class="product product-no-border style-2" v-for="product in getHomeProducts.rand_posts">
                                                         <div class="product-container">
                                                             <figure>
                                                                 <div class="product-wrap">
@@ -246,7 +300,7 @@
             }
         },
 
-        computed: mapGetters(['getProduct', 'getRating', 'user', 'getItemInWishlist', 'getComments', 'getRecommendedProducts']),
+        computed: mapGetters(['getProduct', 'getRating', 'user', 'getItemInWishlist', 'getComments', 'getRecommendedProducts', 'getHomeProducts']),
 
         mounted() {
             this.update()
@@ -254,6 +308,7 @@
 
         methods:{
             update(){
+                this.$store.dispatch('getHomePageProducts')
                 this.$store.dispatch('fetchProduct', this.$route.params.id)
                 this.$store.dispatch('getComments', this.$route.params.id)
                 this.$store.dispatch('getRecommendedProducts')
@@ -275,6 +330,7 @@
             },
 
             addToCart(id, qty=1){
+                console.log(qty)
                 this.$store.dispatch('addToCart', {id: id, qty: qty})
                 this.$store.dispatch('getCart')
             },

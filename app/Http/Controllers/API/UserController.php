@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\API\UserAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\UserUpdateRequest;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,31 +47,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateUserData(Request $request){
-        $data = $request->validate([
-           'name' => 'nullable|string',
-           'old_password' => 'nullable|string',
-           'new_password' => 'nullable|string',
-           'new_password_confirmation' => 'nullable|string',
-        ]);
-        $user = User::where('id', Auth::id())->first();
-
-        if($data['new_password'] === $data['new_password_confirmation']){
-            if(Hash::check($data['old_password'], $user->password)){
-                $user->password = Hash::make($data['new_password']);
-                $user->update();
-            }else{
-                return response()->json('The old password was entered incorrectly');
-            }
-        }else{
-            return response()->json('Passwords do not match');
-        }
-
-        if($data['name'] !== null){
-            $user->name = $data['name'];
-            $user->update();
-        }
-
-        return response()->json('Success');
+    public function updateUserData(UserUpdateRequest $request){
+        $data = $request->validated();
+        return UserAction::updateUserData($data);
     }
 }

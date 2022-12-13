@@ -19,11 +19,11 @@
                                     <div class="form-group mt-2">
                                         <h3>Change Password</h3>
                                         <label>Old Password</label>
-                                        <input type="text" class="form-control" name="old_password" v-model="user.old_password">
+                                        <input type="password" class="form-control" name="old_password" v-model="user.old_password">
                                         <label>New Password</label>
-                                        <input type="text" class="form-control" name="password" v-model="user.new_password">
+                                        <input type="password" class="form-control" name="password" v-model="user.new_password">
                                         <label>Confirm Password</label>
-                                        <input type="text" class="form-control" name="confirmation_password" v-model="user.new_password_confirmation">
+                                        <input type="password" class="form-control" name="confirmation_password" v-model="user.new_password_confirmation">
                                     </div>
 
                                     <div class="form-group">
@@ -77,6 +77,7 @@
         methods:{
             updateUserData(){
                 this.$store.dispatch('updateUserData', this.user);
+                this.$store.dispatch('getUserData')
             }
         }
 

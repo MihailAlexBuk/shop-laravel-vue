@@ -191,11 +191,6 @@
                 }
             },
 
-
-
-
-
-
             loadSlider(){
                 let tpj=jQuery;
                 let revapi7;
@@ -291,7 +286,7 @@
                             }
                         });
                     }
-                });	/*ready*/
+                });
             }
         }
     }
